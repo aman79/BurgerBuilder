@@ -5,12 +5,12 @@ import classes from './Burger.css';
 const Burger = props => {
   let transformedIngredients = Object.keys(props.ingredients)
     .map(igKey => {
-      console.log(
-        'dd',
-        [...Array(props.ingredients[igKey])],
-        igKey,
-        props.ingredients
-      );
+      // console.log(
+      //   'dd',
+      //   [...Array(props.ingredients[igKey])],
+      //   igKey,
+      //   props.ingredients
+      // );
       return [...Array(props.ingredients[igKey])].map((_, i) => {
         return <BurgerIngredient key={igKey + i} type={igKey} />;
       });

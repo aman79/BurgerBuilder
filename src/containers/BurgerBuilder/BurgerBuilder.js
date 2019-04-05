@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
-import Aux from '../../hoc/Aux';
+import Auxx from '../../hoc/Auxx';
 
 const INGREDIENT_PRICE = {
   salad: 0.5,
@@ -47,21 +47,34 @@ class BurgerBuilder extends Component {
       ...this.state.ingredients
     };
     updatedIngredients[type] = updatedCount;
-    const priceADeduction = INGREDIENT_PRICE[type];
-    const price = totalPrice - priceADeduction;
+    const priceDeduction = INGREDIENT_PRICE[type];
+    const price = totalPrice - priceDeduction;
     this.setState({ ingredients: updatedIngredients, totalPrice: price });
   };
 
   render() {
-    const { ingredients } = this.state;
+    const { ingredients, totalPrice } = this.state;
+
+    const disabledInfo = {
+      ...ingredients
+    };
+    for (const key in disabledInfo) {
+      if (disabledInfo.hasOwnProperty(key)) {
+        disabledInfo[key] = disabledInfo[key] <= 0;
+      }
+    }
+
+    console.log('disabled', disabledInfo);
     return (
-      <Aux>
+      <Auxx>
         <Burger ingredients={ingredients} />
         <BuildControls
           ingredientsAdded={this.addIngredient}
-          ingredientRemoved={this.removeIngredient}
+          ingredientsRemoved={this.removeIngredient}
+          disabled={disabledInfo}
+          price={totalPrice}
         />
-      </Aux>
+      </Auxx>
     );
   }
 }
