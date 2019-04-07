@@ -3,6 +3,7 @@ import Button from '../../UI/Button/Button';
 import Auxx from '../../../hoc/Auxx';
 
 const OrderSummary = props => {
+  console.log('[orderSummary] rendering');
   const ingredientSummary = Object.keys(props.ingredients).map(igKey => {
     return (
       <li key={igKey}>
@@ -11,6 +12,7 @@ const OrderSummary = props => {
       </li>
     );
   });
+
   return (
     <Auxx>
       <h3>Your Order</h3>
