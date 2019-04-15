@@ -16,14 +16,14 @@ class BurgerBuilder extends Component {
     // ingredients: null,
     //   totalPrice: 4,
     //   purchasable: false,
-    purchasing: false,
-    loading: false,
-    error: false
+    purchasing: false
+    // loading: false,
+    // error: false
   };
 
   componentDidMount() {
     console.log(this.props);
-
+    this.props.onInitIngredients();
     // axios
     //   .get('https://react-burgerbuilder-2e398.firebaseio.com/ingredients.json')
     //   .then(response => {
@@ -112,8 +112,7 @@ class BurgerBuilder extends Component {
       totalPrice,
       purchasable,
       purchasing,
-      loading,
-      error
+      loading
     } = this.state;
     const disabledInfo = {
       ...this.props.ings
@@ -123,7 +122,11 @@ class BurgerBuilder extends Component {
         disabledInfo[key] = disabledInfo[key] <= 0;
       }
     }
-    let burger = error ? <p>Ingredients can't be loaded !!</p> : <Spinner />;
+    let burger = this.props.error ? (
+      <p>Ingredients can't be loaded !!</p>
+    ) : (
+      <Spinner />
+    );
 
     let orderSummary = null;
 
@@ -150,9 +153,9 @@ class BurgerBuilder extends Component {
         />
       );
     }
-    if (loading) {
-      orderSummary = <Spinner />;
-    }
+    // if (loading) {
+    //   orderSummary = <Spinner />;
+    // }
     // console.log('disabled', disabledInfo);
     return (
       <Auxx>
@@ -167,8 +170,9 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients,
-    price: state.totalPrice
+    ings: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error
   };
 };
 
@@ -177,7 +181,8 @@ const mapDispatchToProps = dispatch => {
     onIngredientAdded: ingName =>
       dispatch(actionCreators.addIngredient(ingName)),
     onIngredientRemoved: ingName =>
-      dispatch(actionCreators.removeIngredient(ingName))
+      dispatch(actionCreators.removeIngredient(ingName)),
+    onInitIngredients: () => dispatch(actionCreators.initIngredients())
   };
 };
 
