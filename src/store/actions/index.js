@@ -3,4 +3,4 @@ export {
   removeIngredient,
   initIngredients
 } from './burgerAction';
-export { purchaseBurger } from './orderAction';
+export { purchaseBurger, purchaseInit } from './orderAction';

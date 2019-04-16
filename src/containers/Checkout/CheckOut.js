@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import CheckOutSummary from '../../components/Order/CheckOutSummary/CheckOutSummary';
 import ContactData from './ContactData/ContactData';
+import * as actionCreators from '../../store/actions/index';
 
 class CheckOut extends Component {
   // state = {
@@ -25,6 +26,10 @@ class CheckOut extends Component {
   //   this.setState({ ingredients: ingredients, totalPrice: price });
   // }
 
+  // componentWillMount() {
+  //   this.props.onInitPurchase();
+  // }
+
   checkOutCancelledHandler = () => {
     this.props.history.goBack();
   };
@@ -36,8 +41,12 @@ class CheckOut extends Component {
   render() {
     let summary = <Redirect to="/" />;
     if (this.props.ings) {
+      const purchaseRedirect = this.props.purchased ? (
+        <Redirect to="/" />
+      ) : null;
       summary = (
         <div>
+          {purchaseRedirect}
           <CheckOutSummary
             ingredients={this.props.ings}
             checkOutCancelled={this.checkOutCancelledHandler}
@@ -65,8 +74,15 @@ class CheckOut extends Component {
 const mapStateToProps = state => {
   return {
     ings: state.burgerBuilder.ingredients,
-    price: state.burgerBuilder.totalPrice
+    price: state.burgerBuilder.totalPrice,
+    purchased: state.order.purchased
   };
 };
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     onInitPurchase: () => dispatch(actionCreators.purchaseInit())
+//   };
+// };
 
 export default connect(mapStateToProps)(CheckOut);
