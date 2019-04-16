@@ -40,3 +40,45 @@ export const purchaseInit = () => {
     type: actionTypes.PURCHASE_INIT
   };
 };
+
+export const fetchedOrdersSuccess = orders => {
+  return {
+    type: actionTypes.FETCHED_ORDER_SUCCESS,
+    orders: orders
+  };
+};
+
+export const fetchOrderFail = error => {
+  return {
+    type: actionTypes.FETCHED_ORDER_FAIL,
+    error: error
+  };
+};
+
+export const fetchOrderStart = () => {
+  return {
+    type: actionTypes.FETCHED_ORDER_START
+  };
+};
+
+export const fetchOrders = () => {
+  return dispatch => {
+    dispatch(fetchOrderStart());
+    axios
+      .get('/orders.json')
+      .then(res => {
+        const fetchedOrder = [];
+        for (let key in res.data) {
+          fetchedOrder.push({
+            ...res.data[key],
+            id: key
+          });
+        }
+        console.log(fetchedOrder);
+        dispatch(fetchedOrdersSuccess(fetchedOrder));
+      })
+      .catch(err => {
+        dispatch(fetchOrderFail(err));
+      });
+  };
+};
