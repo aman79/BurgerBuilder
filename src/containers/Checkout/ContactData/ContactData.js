@@ -123,11 +123,12 @@ class ContactData extends Component {
       ].value;
     }
 
-    const { ings, price } = this.props;
+    const { ings, price, userId } = this.props;
     const order = {
       ings,
       price,
-      orderData: formData
+      orderData: formData,
+      userId
     };
     this.props.onBurgerOrder(order, this.props.token);
     // axios
@@ -185,7 +186,7 @@ class ContactData extends Component {
             changed={event => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
-        <Button btnType="Success" disabled={!this.state.formIsValid}>
+        <Button btnType='Success' disabled={!this.state.formIsValid}>
           ORDER
         </Button>
       </form>
@@ -206,7 +207,8 @@ const mapStateToProps = state => {
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
-    token: state.auth.token
+    token: state.auth.token,
+    userId: state.auth.userId
   };
 };
 
