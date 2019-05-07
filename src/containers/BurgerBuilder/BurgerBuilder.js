@@ -9,8 +9,15 @@ import Auxx from '../../hoc/Auxx/Auxx';
 import axios from '../../axios-order';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import * as actionCreators from '../../store/actions/index';
-import { addIngredient } from '../../store/actions/burgerAction';
+
+import {
+	addIngredient,
+	initIngredients,
+	removeIngredient
+} from '../../store/actions/burgerAction';
+
+import { purchaseInit } from '../../store/actions/orderAction';
+import { setAuthRedirectPath } from '../../store/actions/authAction';
 
 class BurgerBuilder extends Component {
 	state = {
@@ -24,15 +31,7 @@ class BurgerBuilder extends Component {
 
 	componentDidMount() {
 		console.log(this.props);
-		this.props.onInitIngredients();
-		// axios
-		//   .get('https://react-burgerbuilder-2e398.firebaseio.com/ingredients.json')
-		//   .then(response => {
-		//     this.setState({ ingredients: response.data });
-		//   })
-		//   .catch(error => {
-		//     this.setState({ error: true });
-		//   });
+		this.props.initIngredients();
 	}
 
 	updatePurchaseState(ingredients) {
@@ -53,7 +52,7 @@ class BurgerBuilder extends Component {
 		if (this.props.isAuthenticated) {
 			this.setState({ purchasing: true });
 		} else {
-			this.props.onSetAuthRedirectPath('/checkout');
+			this.props.setAuthRedirectPath('/checkout');
 			this.props.history.push('/auth');
 		}
 	};
@@ -63,21 +62,7 @@ class BurgerBuilder extends Component {
 	};
 
 	purchaseContinueHandler = () => {
-		this.props.onInitPurchase();
-		// const queryParams = [];
-		// for (let i in this.state.ingredients) {
-		//   queryParams.push(
-		//     encodeURIComponent(i) +
-		//       '=' +
-		//       encodeURIComponent(this.state.ingredients[i])
-		//   );
-		// }
-		// queryParams.push('price=' + this.state.totalPrice);
-		// const queryString = queryParams.join('&');
-		// this.props.history.push({
-		//   pathname: '/checkout',
-		//   search: '?' + queryString
-		// });
+		this.props.purchaseInit();
 		this.props.history.push('/checkout');
 	};
 	render() {
@@ -109,8 +94,12 @@ class BurgerBuilder extends Component {
 				<Auxx>
 					<Burger ingredients={this.props.ings} />
 					<BuildControls
-						ingredientsAdded={this.props.addIngredient}
-						ingredientsRemoved={this.props.onIngredientRemoved}
+						ingredientsAdded={payload => {
+							this.props.addIngredient(payload);
+						}}
+						ingredientsRemoved={payload => {
+							this.props.removeIngredient(payload);
+						}}
 						disabled={disabledInfo}
 						price={this.props.price}
 						purchasable={this.updatePurchaseState(this.props.ings)}
@@ -151,30 +140,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-	addIngredient
+	addIngredient,
+	removeIngredient,
+	initIngredients,
+	purchaseInit,
+	setAuthRedirectPath
 };
-
-// const mapStateToProps = state => {
-//   return {
-//     ings: state.burgerBuilder.ingredients,
-//     price: state.burgerBuilder.totalPrice,
-//     error: state.burgerBuilder.error,
-//     isAuthenticated: state.auth.token !== null
-//   };
-// };
-
-// const mapDispatchToProps = dispatch => {
-// 	return {
-// 		onIngredientAdded: ingName =>
-// 			dispatch(actionCreators.addIngredient(ingName)),
-// 		onIngredientRemoved: ingName =>
-// 			dispatch(actionCreators.removeIngredient(ingName)),
-// 		onInitIngredients: () => dispatch(actionCreators.initIngredients()),
-// 		onInitPurchase: () => dispatch(actionCreators.purchaseInit()),
-// 		onSetAuthRedirectPath: path =>
-// 			dispatch(actionCreators.setAuthRedirectPath(path))
-// 	};
-// };
 
 export default connect(
 	mapStateToProps,

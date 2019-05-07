@@ -4,15 +4,15 @@ import axios from '../../axios-order';
 export const addIngredient = name => dispatch => {
 	dispatch({
 		type: actionTypes.ADD_INGREDIENT,
-		ingredientName: name
+		payload: name
 	});
 };
 
-export const removeIngredient = name => {
-	return {
+export const removeIngredient = name => dispatch => {
+	dispatch({
 		type: actionTypes.REMOVE_INGREDIENT,
-		ingredientName: name
-	};
+		payload: name
+	});
 };
 
 export const fetchedIngredientsFailed = () => {
@@ -24,7 +24,7 @@ export const fetchedIngredientsFailed = () => {
 export const setIngredients = ingredients => {
 	return {
 		type: actionTypes.SET_INGREDIENTS,
-		ingredients: ingredients
+		payload: ingredients
 	};
 };
 
