@@ -49,4 +49,4 @@ class Modal extends Component {
   }
 }
 
-export default React.memo(Modal);
+export default Modal;

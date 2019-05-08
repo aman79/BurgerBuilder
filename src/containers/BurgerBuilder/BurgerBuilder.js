@@ -66,13 +66,7 @@ class BurgerBuilder extends Component {
 		this.props.history.push('/checkout');
 	};
 	render() {
-		const {
-			ingredients,
-			totalPrice,
-			purchasable,
-			purchasing,
-			loading
-		} = this.state;
+		const { purchasing } = this.state
 		const disabledInfo = {
 			...this.props.ings
 		};
@@ -117,10 +111,6 @@ class BurgerBuilder extends Component {
 				/>
 			);
 		}
-		// if (loading) {
-		//   orderSummary = <Spinner />;
-		// }
-		// console.log('disabled', disabledInfo);
 		return (
 			<Auxx>
 				<Modal show={purchasing} modalClosed={this.purchaseCancelHandler}>
