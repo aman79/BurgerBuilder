@@ -4,21 +4,31 @@ import { connect } from 'react-redux';
 
 import Layout from './hoc/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import CheckOut from './containers/Checkout/CheckOut';
-import Orders from './containers/Orders/Orders';
-import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
-import * as actionCreators from './store/actions/index';
+import { authCheckState } from './store/actions/authAction';
+import asyncComponent from './hoc/asyncComponent/asyncComponent';
+
+const asyncCheckout = asyncComponent(() => {
+	return import('./containers/Checkout/CheckOut');
+});
+
+const asyncOrder = asyncComponent(() => {
+	return import('./containers/Orders/Orders');
+});
+
+const asyncAuth = asyncComponent(() => {
+	return import('./containers/Auth/Auth');
+});
 
 class App extends Component {
 	componentDidMount() {
-		this.props.onTryAutoSignup();
+		this.props.authCheckState();
 	}
 
 	render() {
 		let routes = (
 			<Switch>
-				<Route path='/auth' component={Auth} />
+				<Route path='/auth' component={asyncAuth} />
 				<Route path='/' exact component={BurgerBuilder} />
 				<Redirect to='/' />
 			</Switch>
@@ -27,9 +37,10 @@ class App extends Component {
 		if (this.props.isAuthenticated) {
 			routes = (
 				<Switch>
-					<Route path='/checkout' component={CheckOut} />
-					<Route path='/orders' component={Orders} />
+					<Route path='/checkout' component={asyncCheckout} />
+					<Route path='/orders' component={asyncOrder} />
 					<Route path='/logout' component={Logout} />
+					<Route path='/auth' component={asyncAuth} />
 					<Route path='/' exact component={BurgerBuilder} />
 					<Redirect to='/' />
 				</Switch>
@@ -42,16 +53,12 @@ class App extends Component {
 		);
 	}
 }
-const mapStateToProps = state => {
-	return {
-		isAuthenticated: state.auth.token !== null
-	};
-};
+const mapStateToProps = state => ({
+	isAuthenticated: state.auth.token !== null
+});
 
-const mapDispatchToProps = dispatch => {
-	return {
-		onTryAutoSignup: () => dispatch(actionCreators.authCheckState())
-	};
+const mapDispatchToProps = {
+	authCheckState
 };
 
 export default withRouter(
