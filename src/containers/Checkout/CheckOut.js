@@ -26,7 +26,7 @@ const CheckOut = props => {
 					checkOutContinued={checkOutContinuedHandler}
 				/>
 				<Route
-					path={this.props.match.path + '/contact-data'}
+					path={props.match.path + '/contact-data'}
 					component={ContactData}
 				/>
 			</div>

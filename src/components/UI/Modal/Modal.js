@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { memo } from 'react';
 import Auxx from '../../../hoc/Auxx/Auxx';
 import classes from './Modal.css';
 import Backdrop from '../Backdrop/Backdrop';
@@ -20,33 +20,37 @@ import Backdrop from '../Backdrop/Backdrop';
 //   );
 // };
 
-class Modal extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      nextProps.show !== this.props.show ||
-      nextProps.children !== this.props.children
-    );
-  }
+const Modal = props => {
+	// shouldComponentUpdate(nextProps, nextState) {
+	//   return (
+	//   nextProps.show !== this.props.show ||
+	//   nextProps.children !== this.props.children
+	// );
+	// }
 
-  componentWillUpdate() {
-    console.log('[Modal] componentWillUpdate');
-  }
-  render() {
-    return (
-      <Auxx>
-        <Backdrop show={this.props.show} clicked={this.props.modalClosed} />
-        <div
-          className={classes.Modal}
-          style={{
-            transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
-            opacity: this.props.show ? '1' : '0'
-          }}
-        >
-          {this.props.children}
-        </div>
-      </Auxx>
-    );
-  }
-}
+	// componentWillUpdate() {
+	//   console.log('[Modal] componentWillUpdate');
+	// }
 
-export default Modal;
+	return (
+		<Auxx>
+			<Backdrop show={props.show} clicked={props.modalClosed} />
+			<div
+				className={classes.Modal}
+				style={{
+					transform: props.show ? 'translateY(0)' : 'translateY(-100vh)',
+					opacity: props.show ? '1' : '0'
+				}}
+			>
+				{props.children}
+			</div>
+		</Auxx>
+	);
+};
+
+export default memo(
+	Modal,
+	(prevProps, nextProps) =>
+		nextProps.show === prevProps.show &&
+		nextProps.children === prevProps.children
+);
